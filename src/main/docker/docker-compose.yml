@@ -1,0 +1,32 @@
+version: '1'
+
+services:
+  db:
+    image: 'postgres:latest'
+    container_name: db
+    environment:
+      - POSTGRES_DB=school_analytics_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - backend
+
+  app:
+    image: 'school-analytics-backend:latest'
+    build:
+      context: .
+    container_name: app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/school_analytics_db
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
