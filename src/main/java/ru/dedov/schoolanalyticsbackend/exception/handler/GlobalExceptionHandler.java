@@ -19,7 +19,7 @@ public class GlobalExceptionHandler {
 
 	/**
 	 * @param ex исключение, выбрасываемое в случае если не пройдена валидация входных параметров
-	 * @return ResponseEntity с ErrorResponse с текстом ошибки и кодом 404
+	 * @return ResponseEntity с ErrorResponse с текстом ошибки и кодом 400
 	 */
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<ErrorResponse> handleValidationExceptions(MethodArgumentNotValidException ex) {
@@ -29,7 +29,7 @@ public class GlobalExceptionHandler {
 
 	/**
 	 * @param ex исключение, выбрасываемое в случае если пользователь уже существует
-	 * @return ResponseEntity с ErrorResponse с текстом ошибки и кодом 404
+	 * @return ResponseEntity с ErrorResponse с текстом ошибки и кодом 400
 	 */
 	@ExceptionHandler(UserAlreadyExistsException.class)
 	public ResponseEntity<ErrorResponse> handleUserAlreadyExistsException(UserAlreadyExistsException ex) {
