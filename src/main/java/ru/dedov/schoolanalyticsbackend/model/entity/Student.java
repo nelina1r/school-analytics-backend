@@ -1,5 +1,6 @@
 package ru.dedov.schoolanalyticsbackend.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -29,11 +30,13 @@ public class Student extends User {
 	 * Оценки по предметам
 	 */
 	@OneToMany(mappedBy = "student")
+	@JsonManagedReference
 	private List<Grade> grades;
 	/**
 	 * Посещения
 	 */
 	@OneToMany(mappedBy = "student")
+	@JsonManagedReference
 	private List<Attendance> attendances;
 	/**
 	 * SEL данные студента

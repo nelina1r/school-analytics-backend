@@ -1,5 +1,6 @@
 package ru.dedov.schoolanalyticsbackend.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -39,6 +40,7 @@ public class Attendance {
 	 */
 	@ManyToOne
 	@JoinColumn(name = "student_id", nullable = false)
+	@JsonBackReference
 	private Student student;
 
 	/**
