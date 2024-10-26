@@ -41,6 +41,7 @@ public class Grade {
 	 */
 	@ManyToOne
 	@JoinColumn(name = "subject_id", nullable = false)
+	@JsonBackReference
 	private Subject subject;
 	/**
 	 * Значение оценки

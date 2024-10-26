@@ -1,5 +1,6 @@
 package ru.dedov.schoolanalyticsbackend.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -37,5 +38,6 @@ public class Subject {
 	 * Оценки по предмету
 	 */
 	@OneToMany(mappedBy = "subject")
+	@JsonManagedReference
 	private List<Grade> grades;
 }
