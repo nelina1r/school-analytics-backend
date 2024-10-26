@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import ru.dedov.schoolanalyticsbackend.dto.SignUpRequest;
 import ru.dedov.schoolanalyticsbackend.exception.UserAlreadyExistsException;
 import ru.dedov.schoolanalyticsbackend.model.entity.User;
 import ru.dedov.schoolanalyticsbackend.model.entity.enums.Role;
@@ -58,7 +60,6 @@ public class UserService {
 
 	/**
 	 * Получение пользователя по имени пользователя
-	 * <p>
 	 * Нужен для Spring Security
 	 *
 	 * @return пользователь
@@ -81,10 +82,8 @@ public class UserService {
 
 	/**
 	 * Выдача прав администратора текущему пользователю
-	 *
-	 * Нужен для демонстрации todo: удалить
+	 * Нужен для демонстрации
 	 */
-	@Deprecated
 	public void getAdmin() {
 		User user = getCurrentUser();
 		user.setRole(Role.ROLE_ADMIN);

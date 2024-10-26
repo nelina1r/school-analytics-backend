@@ -6,7 +6,10 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.dedov.schoolanalyticsbackend.dto.ErrorResponse;
+import ru.dedov.schoolanalyticsbackend.exception.AlreadyExistsException;
 import ru.dedov.schoolanalyticsbackend.exception.UserAlreadyExistsException;
+
+import java.util.NoSuchElementException;
 
 /**
  * Централизованный обработчик исключений на уровне всего приложения
@@ -33,6 +36,24 @@ public class GlobalExceptionHandler {
 	 */
 	@ExceptionHandler(UserAlreadyExistsException.class)
 	public ResponseEntity<ErrorResponse> handleUserAlreadyExistsException(UserAlreadyExistsException ex) {
+		return new ResponseEntity<>(new ErrorResponse(ex.getLocalizedMessage()), HttpStatus.BAD_REQUEST);
+	}
+
+	/**
+	 * @param ex исключение, выбрасываемое в случае если чего то не существует
+	 * @return ResponseEntity с ErrorResponse с текстом ошибки и кодом 400
+	 */
+	@ExceptionHandler(NoSuchElementException.class)
+	public ResponseEntity<ErrorResponse> handleNoSuchElementException(NoSuchElementException ex) {
+		return new ResponseEntity<>(new ErrorResponse(ex.getLocalizedMessage()), HttpStatus.BAD_REQUEST);
+	}
+
+	/**
+	 * @param ex исключение, выбрасываемое в случае если что-то уже существует
+	 * @return ResponseEntity с ErrorResponse с текстом ошибки и кодом 400
+	 */
+	@ExceptionHandler(AlreadyExistsException.class)
+	public ResponseEntity<ErrorResponse> handleAlreadyExistsException(AlreadyExistsException ex) {
 		return new ResponseEntity<>(new ErrorResponse(ex.getLocalizedMessage()), HttpStatus.BAD_REQUEST);
 	}
 }
