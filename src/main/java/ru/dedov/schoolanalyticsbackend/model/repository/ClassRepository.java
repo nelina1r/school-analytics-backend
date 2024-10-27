@@ -14,4 +14,6 @@ import ru.dedov.schoolanalyticsbackend.model.entity.Class;
 public interface ClassRepository extends JpaRepository<Class, Long> {
 
 	boolean existsByNameIgnoreCase(String name);
+
+	Class findByNameIgnoreCase(String name);
 }

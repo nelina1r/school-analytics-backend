@@ -2,9 +2,12 @@ package ru.dedov.schoolanalyticsbackend.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.dedov.schoolanalyticsbackend.dto.AssignToClassRequest;
 import ru.dedov.schoolanalyticsbackend.dto.CreateClassRequest;
 import ru.dedov.schoolanalyticsbackend.model.entity.Class;
+import ru.dedov.schoolanalyticsbackend.model.entity.Student;
 import ru.dedov.schoolanalyticsbackend.model.repository.ClassRepository;
+import ru.dedov.schoolanalyticsbackend.model.repository.StudentRepository;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -20,6 +23,15 @@ import java.util.NoSuchElementException;
 public class ClassService {
 
 	private final ClassRepository classRepository;
+	private final StudentRepository studentRepository;
+
+	public void assignStudentToClass(AssignToClassRequest request) {
+		Class clazz = classRepository.findByNameIgnoreCase(request.getClassName());
+		Student student = studentRepository.findById(request.getUserId())
+			.orElseThrow(() -> new NoSuchElementException("Студент не найден"));
+		clazz.getStudents().add(student);
+		saveClass(clazz);
+	}
 
 	public void createClass(CreateClassRequest request) {
 		Class classEntity = new Class();

@@ -4,11 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.dedov.schoolanalyticsbackend.dto.SignUpRequest;
+import ru.dedov.schoolanalyticsbackend.exception.UserAlreadyExistsException;
 import ru.dedov.schoolanalyticsbackend.model.entity.Class;
 import ru.dedov.schoolanalyticsbackend.model.entity.Teacher;
 import ru.dedov.schoolanalyticsbackend.model.entity.User;
 import ru.dedov.schoolanalyticsbackend.model.entity.enums.Role;
 import ru.dedov.schoolanalyticsbackend.model.repository.TeacherRepository;
+import ru.dedov.schoolanalyticsbackend.model.repository.UserRepository;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -24,6 +26,7 @@ import java.util.NoSuchElementException;
 public class TeacherService {
 	private final TeacherRepository teacherRepository;
 	private final UserService userService;
+	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
 
 	public List<Class> listMyClasses() {
@@ -36,12 +39,18 @@ public class TeacherService {
 	 * Создать нового пользователя с ролью учителя
 	 */
 	public void createNewTeacher(SignUpRequest request) {
-		User user = User.builder()
-			.fio(request.getFio())
-			.email(request.getEmail())
-			.password(passwordEncoder.encode(request.getPassword()))
-			.role(Role.ROLE_TEACHER)
-			.build();
-		userService.createUser(user);
+		Teacher teacher = new Teacher();
+		teacher.setFio(request.getFio());
+		teacher.setUsername(request.getUsername());
+		teacher.setEmail(request.getEmail());
+		teacher.setPassword(passwordEncoder.encode(request.getPassword()));
+		teacher.setRole(Role.ROLE_TEACHER);
+		if (userRepository.existsByUsername(teacher.getUsername())) {
+			throw new UserAlreadyExistsException("Учитель с таким именем уже существует");
+		}
+		if (userRepository.existsByEmail(teacher.getEmail())) {
+			throw new UserAlreadyExistsException("Учитель с таким email уже существует");
+		}
+		teacherRepository.save(teacher);
 	}
 }

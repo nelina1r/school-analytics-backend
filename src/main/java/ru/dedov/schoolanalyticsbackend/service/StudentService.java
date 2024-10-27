@@ -7,6 +7,7 @@ import ru.dedov.schoolanalyticsbackend.dto.StudentDashboardDto;
 import ru.dedov.schoolanalyticsbackend.model.entity.Grade;
 import ru.dedov.schoolanalyticsbackend.model.entity.Student;
 import ru.dedov.schoolanalyticsbackend.model.entity.enums.AttendanceStatus;
+import ru.dedov.schoolanalyticsbackend.model.entity.enums.Role;
 import ru.dedov.schoolanalyticsbackend.model.repository.AttendanceRepository;
 import ru.dedov.schoolanalyticsbackend.model.repository.GradeRepository;
 import ru.dedov.schoolanalyticsbackend.model.repository.StudentRepository;
@@ -64,7 +65,9 @@ public class StudentService {
 	}
 
 	public List<Student> listAllStudents() {
-		return studentRepository.findAll();
+		return studentRepository.findAll().stream()
+			.filter(student -> student.getRole().equals(Role.ROLE_STUDENT))
+			.toList();
 	}
 
 	public void saveStudent(Student student) {
