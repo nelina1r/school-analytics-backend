@@ -66,8 +66,7 @@ public class StudentService {
 
 	public List<Student> listAllStudents() {
 		return studentRepository.findAll().stream()
-			.filter(student -> student.getRole().equals(Role.ROLE_STUDENT))
-			.toList();
+			.filter(student -> student.getRole().equals(Role.ROLE_STUDENT)).toList();
 	}
 
 	public void saveStudent(Student student) {

@@ -1,5 +1,8 @@
 package ru.dedov.schoolanalyticsbackend.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -38,11 +41,13 @@ public class Class {
 	 * Закрепленный учитель
 	 */
 	@ManyToOne
-	@JoinColumn(name = "teacher_id", nullable = false)
+	@JoinColumn(name = "teacher_id")
+	@JsonIgnoreProperties({"assignedClasses"})
 	private Teacher teacher;
 	/**
 	 * Ученики класса
 	 */
 	@OneToMany(mappedBy = "aClass")
+	@JsonManagedReference
 	private List<Student> students;
 }
