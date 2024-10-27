@@ -23,22 +23,39 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "users")
+@Inheritance(strategy = InheritanceType.JOINED)
 public class User implements UserDetails {
 
+	/**
+	 * Id пользователя
+	 */
 	@Id
 	@Column(name = "id")
-	@GeneratedValue(strategy = GenerationType.UUID)
-	private String id;
-
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	/**
+	 * ФИО пользователя
+	 */
+	@Column(name = "fio", nullable = false)
+	private String fio; //нарушение атомарности ради демки
+	/**
+	 * Логин
+	 */
 	@Column(name = "username", unique = true, nullable = false)
 	private String username;
-
+	/**
+	 * Пароль
+	 */
 	@Column(name = "password", nullable = false)
 	private String password;
-
+	/**
+	 * Почта
+	 */
 	@Column(name = "email", unique = true, nullable = false)
 	private String email;
-
+	/**
+	 * Роль
+	 */
 	@Enumerated(EnumType.STRING)
 	@Column(name = "role", nullable = false)
 	private Role role;

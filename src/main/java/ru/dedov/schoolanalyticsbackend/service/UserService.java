@@ -4,7 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import ru.dedov.schoolanalyticsbackend.dto.SignUpRequest;
+import ru.dedov.schoolanalyticsbackend.exception.UserAlreadyExistsException;
 import ru.dedov.schoolanalyticsbackend.model.entity.User;
 import ru.dedov.schoolanalyticsbackend.model.entity.enums.Role;
 import ru.dedov.schoolanalyticsbackend.model.repository.UserRepository;
@@ -18,6 +21,7 @@ import ru.dedov.schoolanalyticsbackend.model.repository.UserRepository;
 @Service
 @RequiredArgsConstructor
 public class UserService {
+
 	private final UserRepository userRepository;
 
 	/**
@@ -36,14 +40,11 @@ public class UserService {
 	 */
 	public User createUser(User user) {
 		if (userRepository.existsByUsername(user.getUsername())) {
-			// Заменить на свои исключения
-			throw new RuntimeException("Пользователь с таким именем уже существует");
+			throw new UserAlreadyExistsException("Пользователь с таким именем уже существует");
 		}
-
 		if (userRepository.existsByEmail(user.getEmail())) {
-			throw new RuntimeException("Пользователь с таким email уже существует");
+			throw new UserAlreadyExistsException("Пользователь с таким email уже существует");
 		}
-
 		return saveUser(user);
 	}
 
@@ -55,12 +56,10 @@ public class UserService {
 	public User getByUsername(String username) {
 		return userRepository.findByUsername(username)
 			.orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
-
 	}
 
 	/**
 	 * Получение пользователя по имени пользователя
-	 * <p>
 	 * Нужен для Spring Security
 	 *
 	 * @return пользователь
@@ -83,10 +82,8 @@ public class UserService {
 
 	/**
 	 * Выдача прав администратора текущему пользователю
-	 *
-	 * Нужен для демонстрации todo: удалить
+	 * Нужен для демонстрации
 	 */
-	@Deprecated
 	public void getAdmin() {
 		User user = getCurrentUser();
 		user.setRole(Role.ROLE_ADMIN);

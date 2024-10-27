@@ -9,8 +9,10 @@ import org.springframework.stereotype.Service;
 import ru.dedov.schoolanalyticsbackend.dto.JwtAuthenticationResponse;
 import ru.dedov.schoolanalyticsbackend.dto.SignInRequest;
 import ru.dedov.schoolanalyticsbackend.dto.SignUpRequest;
+import ru.dedov.schoolanalyticsbackend.model.entity.Student;
 import ru.dedov.schoolanalyticsbackend.model.entity.User;
 import ru.dedov.schoolanalyticsbackend.model.entity.enums.Role;
+import ru.dedov.schoolanalyticsbackend.service.StudentService;
 import ru.dedov.schoolanalyticsbackend.service.UserService;
 
 /**
@@ -23,6 +25,7 @@ import ru.dedov.schoolanalyticsbackend.service.UserService;
 @RequiredArgsConstructor
 public class AuthenticationService {
 	private final UserService userService;
+	private final StudentService studentService;
 	private final JwtService jwtService;
 	private final PasswordEncoder passwordEncoder;
 	private final AuthenticationManager authenticationManager;
@@ -34,14 +37,14 @@ public class AuthenticationService {
 	 * @return токен
 	 */
 	public JwtAuthenticationResponse signUp(SignUpRequest request) {
-		User user = User.builder()
-			.username(request.getUsername())
-			.email(request.getEmail())
-			.password(passwordEncoder.encode(request.getPassword()))
-			.role(Role.ROLE_STUDENT)
-			.build();
-		userService.createUser(user);
-		String jwt = jwtService.generateToken(user);
+		Student userStudent = new Student();
+		userStudent.setUsername(request.getUsername());
+		userStudent.setPassword(passwordEncoder.encode(request.getPassword()));
+		userStudent.setFio(request.getFio());
+		userStudent.setEmail(request.getEmail());
+		userStudent.setRole(Role.ROLE_STUDENT);
+		studentService.saveStudent(userStudent);
+		String jwt = jwtService.generateToken(userStudent);
 		return new JwtAuthenticationResponse(jwt);
 	}
 
